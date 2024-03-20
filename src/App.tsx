@@ -6,7 +6,7 @@ import Canvas from './components/Canvas';
 
 function App() {
   return (
-    <div className="App">
+    <div className="h-screen w-screen flex justify-center items-center p-10 md:p-20">
       <Canvas />
     </div>
   );
