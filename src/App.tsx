@@ -1,26 +1,13 @@
 // REACT IMPORT
 import React from 'react';
 
-// ASSETS IMPORTS
-import logo from './logo.svg';
+// COMPONENTS IMPORTS
+import Canvas from './components/Canvas';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="h-screen w-screen flex justify-center items-center p-10 md:p-20">
+      <Canvas />
     </div>
   );
 }
