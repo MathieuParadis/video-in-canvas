@@ -9,7 +9,6 @@ const Canvas = (): JSX.Element => {
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   useEffect(() => {
-    // Initialize
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
 
@@ -21,7 +20,7 @@ const Canvas = (): JSX.Element => {
 
     const image = new Image();
     image.src = scenes[0].media
-    
+
     image.onload = () => {
       canvasCtxRef.current?.drawImage(image, 0, 0, canvasRef.current?.width ?? 300, canvasRef.current?.height ?? 168);
     };
@@ -29,12 +28,11 @@ const Canvas = (): JSX.Element => {
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
-      {/* canvas container */}
       <div className='w-full h-full flex justify-center items-center bg-black'>
         <canvas
           className='bg-red-500 h-full aspect-video'
           ref={canvasRef}
-          ></canvas>
+        ></canvas>
       </div>
     </div>
   );
