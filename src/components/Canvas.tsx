@@ -8,7 +8,7 @@ const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const animationRef = useRef<number>();
-  const [currentSceneIndex, setCurrentSceneIndex] = useState(1);
+  const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [textPositionX, setTextPositionX] = useState(0);
 
   useEffect(() => {
@@ -61,6 +61,16 @@ const Canvas = () => {
       cancelAnimationFrame(animationRef.current!);
     };
   }, [currentSceneIndex, textPositionX]);
+  
+  useEffect(() => {
+    // Move to next scene after the duration of the current scene
+    const currentScene = scenes[currentSceneIndex];
+    const timeoutId = setTimeout(() => {
+      setCurrentSceneIndex(currentSceneIndex + 1 > scenes.length - 1 ? 0 : currentSceneIndex + 1);
+    }, currentScene.duration * 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [currentSceneIndex]);
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
