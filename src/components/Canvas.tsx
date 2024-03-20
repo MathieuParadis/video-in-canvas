@@ -78,14 +78,15 @@ const Canvas = () => {
       <div id='canvas-container' className='relative w-full h-full flex justify-center items-center bg-black'>
         <canvas className='bg-red-500 h-full aspect-video' ref={canvasRef}></canvas>
         <div className='overlay absolute bg-black opacity-50 top-0 left-0 w-full h-full'></div>
-        {/* <div className='flex'>
+        <div className='overlay absolute'>
           {!isPlaying &&
-            <button className='w-[150px] text-black'>Play</button>
+            <button className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'>Play</button>
           }
           {isPlaying &&
-            <button className='w-[150px] text-black'>Pause</button>
+            <button className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'>Pause</button>
           }
-        </div> */}
+          <button className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'>Stop</button>
+        </div>
       </div>
     </div>
   );
