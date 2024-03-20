@@ -1,6 +1,8 @@
+// REACT IMPORT
 import React from 'react';
+
+// ASSETS IMPORTS
 import logo from './logo.svg';
-import './App.css';
 
 function App() {
   return (
