@@ -31,10 +31,10 @@ const Canvas = (): JSX.Element => {
         canvasCtxRef.current?.drawImage(image, 0, 0, canvasRef.current?.width ?? 300, canvasRef.current?.height ?? 168);
 
         // Add text on top of the image
-        canvasCtxRef.current.font = '55px Arial';
+        canvasCtxRef.current.font = '95px Arial';
         canvasCtxRef.current.fillStyle = 'white';
-        canvasCtxRef.current.textAlign = 'right';
-        canvasCtxRef.current.fillText(currentScene.sentence, (canvasRef.current?.width ?? 300 / 2), 50);
+        canvasCtxRef.current.textAlign = 'center';
+        canvasCtxRef.current.fillText(currentScene.sentence, (canvasRef.current?.width ?? 300) / 2, 100, 1000);
       };
     }
   }, [currentScene]);
