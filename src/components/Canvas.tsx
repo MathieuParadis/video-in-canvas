@@ -5,9 +5,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { scenes } from '../data/scenes';
 
 const Canvas = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const animationRef = useRef<number>();
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [textPositionX, setTextPositionX] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false)
@@ -17,11 +19,13 @@ const Canvas = () => {
 
   const handlePlay = () => {
     setIsPlaying(true);
+    audioRef.current?.play();
   };
 
   const handlePause = () => {
     setIsPlaying(false);
     setPauseTimeStamp(Date.now())
+    audioRef.current?.pause();
   };
 
   const handleStop = () => {
@@ -35,6 +39,11 @@ const Canvas = () => {
       cancelAnimationFrame(animationRef.current);
     }
     canvasCtxRef.current?.clearRect(0, 0, canvasRef.current?.width ?? 3000, canvasRef.current?.height ?? 1680);
+    
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0;
+    }
   };
 
   useEffect(() => {
@@ -133,7 +142,11 @@ const Canvas = () => {
             className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'
             onClick={handleStop}
           >Stop</button>
-          </div>
+        </div>
+        <audio className='hidden' ref={audioRef}>
+          <source src="https://cdn.pixabay.com/audio/2023/09/29/audio_0eaceb1002.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
       </div>
     </div>
   );
