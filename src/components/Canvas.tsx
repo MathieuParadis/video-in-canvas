@@ -1,6 +1,9 @@
 // REACT IMPORT
 import React from 'react';
 
+// DATA IMPORTS
+import { medias } from '../data/medias';
+
 const Canvas = (): JSX.Element => {
   return (
     <div className='w-full h-full flex justify-center items-center'>

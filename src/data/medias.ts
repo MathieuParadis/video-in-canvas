@@ -1,7 +1,7 @@
 // TYPES IMPORTS
-import { type MediaType } from '../types/mediaTypes'
+import { type SceneType } from '../types/sceneTypes'
 
-export const medias: MediaType[] = [
+export const medias: SceneType[] = [
   {
     index: 0,
     sentence: "This is a simple Javascript test",
