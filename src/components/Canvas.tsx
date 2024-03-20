@@ -11,15 +11,25 @@ const Canvas = () => {
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [textPositionX, setTextPositionX] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false)
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [startTimeStamp, setStartTimeStamp] = useState(0);
+  const [pauseTimeStamp, setPauseTimeStamp] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(0);
 
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+  const handlePlay = () => {
+    setIsPlaying(true);
+  };
+
+  const handlePause = () => {
+    setIsPlaying(false);
+    setPauseTimeStamp(Date.now())
   };
 
   const handleStop = () => {
     setTextPositionX(0);
     setCurrentSceneIndex(0);
+    setStartTimeStamp(0);
+    setPauseTimeStamp(0);
+    setRemainingTime(0);
     setIsPlaying(false);
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
@@ -79,16 +89,27 @@ const Canvas = () => {
   }, [isPlaying, currentSceneIndex, textPositionX]);
   
   useEffect(() => {
+    const currentScene = scenes[currentSceneIndex];
+
     if (isPlaying) {
       // Move to next scene after the duration of the current scene
-      const currentScene = scenes[currentSceneIndex];
       const timeoutId = setTimeout(() => {
         setCurrentSceneIndex(currentSceneIndex + 1 > scenes.length - 1 ? 0 : currentSceneIndex + 1);
-      }, currentScene.duration * 1000);
+        setTextPositionX(0)
+      }, remainingTime);
 
       return () => clearTimeout(timeoutId);
+    } else {
+      setRemainingTime((currentScene.duration * 1000) - (pauseTimeStamp - startTimeStamp))
     }
-  }, [isPlaying, currentSceneIndex]);
+  }, [isPlaying, currentSceneIndex, startTimeStamp, pauseTimeStamp, remainingTime]);
+
+  useEffect(() => {
+    const currentScene = scenes[currentSceneIndex];
+    setStartTimeStamp(Date.now())
+    setRemainingTime(currentScene.duration * 1000)
+  }, [currentSceneIndex])
+
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
@@ -99,13 +120,13 @@ const Canvas = () => {
           {!isPlaying &&
             <button
               className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'
-              onClick={handlePlayPause}
+              onClick={handlePlay}
             >Play</button>
           }
           {isPlaying &&
             <button
               className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'
-              onClick={handlePlayPause}
+              onClick={handlePause}
             >Pause</button>
           }
           <button
