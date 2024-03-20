@@ -12,7 +12,7 @@ export const scenes: SceneType[] = [
     index: 1,
     sentence: "yoyoyoy",
     media: "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_1280.jpg",
-    duration: 8
+    duration: 1
   },
   // {
   //   index: 1,

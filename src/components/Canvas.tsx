@@ -11,17 +11,21 @@ const Canvas = () => {
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [textPositionX, setTextPositionX] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false)
+  const [elapsedTime, setElapsedTime] = useState(0);
 
-  const playPause = ():void => {
-    setIsPlaying(!isPlaying)
-  }
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
 
-  const stop = ():void => {
-    setTextPositionX(0)
-    setCurrentSceneIndex(0)
-    setIsPlaying(false)
+  const handleStop = () => {
+    setTextPositionX(0);
+    setCurrentSceneIndex(0);
+    setIsPlaying(false);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
     canvasCtxRef.current?.clearRect(0, 0, canvasRef.current?.width ?? 3000, canvasRef.current?.height ?? 1680);
-  }
+  };
 
   useEffect(() => {
     if (isPlaying) {
@@ -95,18 +99,18 @@ const Canvas = () => {
           {!isPlaying &&
             <button
               className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'
-              onClick={playPause}
+              onClick={handlePlayPause}
             >Play</button>
           }
           {isPlaying &&
             <button
               className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'
-              onClick={playPause}
+              onClick={handlePlayPause}
             >Pause</button>
           }
           <button
             className='w-[150px] p-2 m-4 text-white border border-white hover:border-black hover:text-black hover:bg-white'
-            onClick={stop}
+            onClick={handleStop}
           >Stop</button>
           </div>
       </div>
