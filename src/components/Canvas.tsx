@@ -4,8 +4,8 @@ import { scenes } from '../data/scenes';
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
-  const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const animationRef = useRef<number>();
+  const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [textPositionX, setTextPositionX] = useState(0);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Canvas = () => {
 
         // Update text position for next frame
         setTextPositionX((prevPositionX) => {
-          const nextPositionX = prevPositionX + 1;
+          const nextPositionX = prevPositionX + 0.15;
           return nextPositionX >= canvasRef.current!.width ? 0 : nextPositionX;
         });
       }
