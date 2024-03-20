@@ -3,6 +3,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* COMPONENTS IMPORTS */
+@import './components/canvas.css';
+
 /* APP IMPORT */
 @import './App.css';
 

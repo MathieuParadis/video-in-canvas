@@ -10,6 +10,7 @@ const Canvas = () => {
   const animationRef = useRef<number>();
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [textPositionX, setTextPositionX] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -74,8 +75,17 @@ const Canvas = () => {
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
-      <div className='w-full h-full flex justify-center items-center bg-black'>
+      <div id='canvas-container' className='relative w-full h-full flex justify-center items-center bg-black'>
         <canvas className='bg-red-500 h-full aspect-video' ref={canvasRef}></canvas>
+        <div className='overlay absolute bg-black opacity-50 top-0 left-0 w-full h-full'></div>
+        {/* <div className='flex'>
+          {!isPlaying &&
+            <button className='w-[150px] text-black'>Play</button>
+          }
+          {isPlaying &&
+            <button className='w-[150px] text-black'>Pause</button>
+          }
+        </div> */}
       </div>
     </div>
   );
