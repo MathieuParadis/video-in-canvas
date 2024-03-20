@@ -1,0 +1,17 @@
+#canvasContainer {
+    width: 80%;
+    height: 70%;
+    padding-bottom: 56.25%; /* 9/16 aspect ratio (16:9) */
+    position: relative;
+    overflow: hidden; /* Ensure canvas won't overflow container */
+}
+
+#myCanvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 2px solid black; /* Adding a black border with 2px thickness */
+    box-sizing: border-box; /* Ensuring border is included in the width and height */
+}
