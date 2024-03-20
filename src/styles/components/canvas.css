@@ -1,0 +1,7 @@
+#canvas-container .overlay {
+    display: none;
+}
+
+#canvas-container:hover .overlay {
+    display: block;
+}
