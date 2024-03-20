@@ -1,11 +1,14 @@
+// REACT IMPORTS
 import React, { useEffect, useRef, useState } from 'react';
+
+// DATA IMPORTS
 import { scenes } from '../data/scenes';
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const animationRef = useRef<number>();
-  const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
+  const [currentSceneIndex, setCurrentSceneIndex] = useState(1);
   const [textPositionX, setTextPositionX] = useState(0);
 
   useEffect(() => {
