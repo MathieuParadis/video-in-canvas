@@ -9,13 +9,9 @@ const Canvas = () => {
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const animationRef = useRef<number>();
   const audioRef = useRef<HTMLAudioElement>(null);
-
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [textPositionX, setTextPositionX] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false)
-  const [startTimeStamp, setStartTimeStamp] = useState(0);
-  const [pauseTimeStamp, setPauseTimeStamp] = useState(0);
-  const [remainingTime, setRemainingTime] = useState(0);
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -24,16 +20,12 @@ const Canvas = () => {
 
   const handlePause = () => {
     setIsPlaying(false);
-    setPauseTimeStamp(Date.now())
     audioRef.current?.pause();
   };
 
   const handleStop = () => {
     setTextPositionX(0);
     setCurrentSceneIndex(0);
-    setStartTimeStamp(0);
-    setPauseTimeStamp(0);
-    setRemainingTime(0);
     setIsPlaying(false);
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
@@ -79,7 +71,7 @@ const Canvas = () => {
           // Update text position for next frame
           setTextPositionX((prevPositionX) => {
             const nextPositionX = prevPositionX + 0.15;
-            return nextPositionX >= canvasRef.current!.width ? 0 : nextPositionX;
+            return nextPositionX;
           });
         }
 
@@ -98,27 +90,17 @@ const Canvas = () => {
   }, [isPlaying, currentSceneIndex, textPositionX]);
   
   useEffect(() => {
-    const currentScene = scenes[currentSceneIndex];
-
     if (isPlaying) {
+      const currentScene = scenes[currentSceneIndex];
       // Move to next scene after the duration of the current scene
       const timeoutId = setTimeout(() => {
         setCurrentSceneIndex(currentSceneIndex + 1 > scenes.length - 1 ? 0 : currentSceneIndex + 1);
         setTextPositionX(0)
-      }, remainingTime);
+      }, currentScene.duration * 1000);
 
       return () => clearTimeout(timeoutId);
-    } else {
-      setRemainingTime((currentScene.duration * 1000) - (pauseTimeStamp - startTimeStamp))
     }
-  }, [isPlaying, currentSceneIndex, startTimeStamp, pauseTimeStamp, remainingTime]);
-
-  useEffect(() => {
-    const currentScene = scenes[currentSceneIndex];
-    setStartTimeStamp(Date.now())
-    setRemainingTime(currentScene.duration * 1000)
-  }, [currentSceneIndex])
-
+  }, [isPlaying, currentSceneIndex]);
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
