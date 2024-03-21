@@ -19,7 +19,7 @@ const VideoCanvas = (): JSX.Element => {
     const video = videoRef.current
     if (video != null) {
       void video?.play().catch((error) => {
-        console.error('Failed to play audio:', error)
+        console.error('Failed to play video:', error)
       })
     }
   }
@@ -65,13 +65,13 @@ const VideoCanvas = (): JSX.Element => {
     if (animationRef.current != null) {
       cancelAnimationFrame(animationRef.current)
     }
+    handleStopVideo()
     canvasCtxRef?.clearRect(
       0,
       0,
       canvasRef.current?.width ?? 3000,
       canvasRef.current?.height ?? 1680
     )
-    handleStopVideo()
 
     if (audioRef.current != null) {
       audioRef.current.pause()
@@ -102,11 +102,6 @@ const VideoCanvas = (): JSX.Element => {
           canvasRef.current?.width ?? 3000,
           canvasRef.current?.height ?? 1680
         )
-        // Draw text
-        canvasCtxRef.font = '10px Arial'
-        canvasCtxRef.fillStyle = 'white'
-        canvasCtxRef.textAlign = 'left'
-        canvasCtxRef.fillText(currentText, 100, 100, 1000)
         requestAnimationFrame(drawFrame)
       }
     }
@@ -116,8 +111,13 @@ const VideoCanvas = (): JSX.Element => {
       typeText()
     }, 150) // Adjust typing speed
 
-    if (video != null && canvasRef.current != null) {
+    if (video != null && canvasRef.current != null && canvasCtxRef != null) {
       video.addEventListener('play', drawFrame)
+      // Draw text
+      canvasCtxRef.font = '80px Arial'
+      canvasCtxRef.fillStyle = 'white'
+      canvasCtxRef.textAlign = 'left'
+      canvasCtxRef.fillText(currentText, 100, 100)
       return () => {
         video.removeEventListener('play', drawFrame)
         clearInterval(typingInterval)
@@ -147,6 +147,17 @@ const VideoCanvas = (): JSX.Element => {
       }
     }
   })
+
+  useEffect(() => {
+    if (videoRef.current != null && isPlaying) {
+      const video = videoRef.current
+      video.src = videoScenes[currentSceneIndex].media
+      video.load()
+      void video?.play().catch((error) => {
+        console.error('Failed to play video:', error)
+      })
+    }
+  }, [currentSceneIndex, isPlaying])
 
   return (
     <div className="w-full h-full flex justify-center items-center">
@@ -187,7 +198,7 @@ const VideoCanvas = (): JSX.Element => {
         </audio>
       </div>
       <video className="hidden" ref={videoRef} width="400" height="300" controls>
-        <source src={videoScenes[0].media} type="video/mp4" />
+        <source src={videoScenes[currentSceneIndex].media} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </div>
