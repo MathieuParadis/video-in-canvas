@@ -102,6 +102,11 @@ const VideoCanvas = (): JSX.Element => {
           canvasRef.current?.width ?? 3000,
           canvasRef.current?.height ?? 1680
         )
+        // Draw text
+        canvasCtxRef.font = '10px Arial'
+        canvasCtxRef.fillStyle = 'white'
+        canvasCtxRef.textAlign = 'left'
+        canvasCtxRef.fillText(currentText, 100, 100, 1000)
         requestAnimationFrame(drawFrame)
       }
     }
@@ -111,13 +116,8 @@ const VideoCanvas = (): JSX.Element => {
       typeText()
     }, 150) // Adjust typing speed
 
-    if (video != null && canvasRef.current != null && canvasCtxRef != null) {
+    if (video != null && canvasRef.current != null) {
       video.addEventListener('play', drawFrame)
-      // Draw text
-      canvasCtxRef.font = '80px Arial'
-      canvasCtxRef.fillStyle = 'white'
-      canvasCtxRef.textAlign = 'left'
-      canvasCtxRef.fillText(currentText, 100, 100)
       return () => {
         video.removeEventListener('play', drawFrame)
         clearInterval(typingInterval)
