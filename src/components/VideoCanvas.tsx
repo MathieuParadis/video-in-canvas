@@ -2,20 +2,48 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 // DATA IMPORTS
-import { imgScenes as scenes } from '../data/scenes'
+import { videoScenes } from '../data/scenes'
 
-const Canvas = (): JSX.Element => {
+const VideoCanvas = (): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null)
   const animationRef = useRef<number>()
+  const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0)
   const [currentText, setCurrentText] = useState('')
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
 
+  // Function to handle video playback
+  const handlePlayVideo = (): void => {
+    const video = videoRef.current
+    if (video != null) {
+      void video?.play().catch((error) => {
+        console.error('Failed to play video:', error)
+      })
+    }
+  }
+
+  const handlePauseVideo = (): void => {
+    const video = videoRef.current
+    if (video != null) {
+      video.pause()
+      setIsPlaying(false)
+    }
+  }
+
+  const handleStopVideo = (): void => {
+    const video = videoRef.current
+    if (video != null) {
+      video.pause()
+      video.currentTime = 0
+      setIsPlaying(false)
+    }
+  }
+
   const handlePlay = (): void => {
     setIsPlaying(true)
+    handlePlayVideo()
 
     void audioRef.current?.play().catch((error) => {
       console.error('Failed to play audio:', error)
@@ -25,9 +53,11 @@ const Canvas = (): JSX.Element => {
   const handlePause = (): void => {
     setIsPlaying(false)
     audioRef.current?.pause()
+    handlePauseVideo()
   }
 
   const handleStop = (): void => {
+    const canvasCtxRef = canvasRef.current?.getContext('2d')
     setCurrentSceneIndex(0)
     setCurrentText('')
     setCurrentTextIndex(0)
@@ -35,7 +65,8 @@ const Canvas = (): JSX.Element => {
     if (animationRef.current != null) {
       cancelAnimationFrame(animationRef.current)
     }
-    canvasCtxRef.current?.clearRect(
+    handleStopVideo()
+    canvasCtxRef?.clearRect(
       0,
       0,
       canvasRef.current?.width ?? 3000,
@@ -50,70 +81,57 @@ const Canvas = (): JSX.Element => {
 
   // Function to simulate typing effect
   const typeText = (): void => {
-    if (currentTextIndex < scenes[currentSceneIndex].sentence.length) {
-      setCurrentText((prevText) => prevText + scenes[currentSceneIndex].sentence[currentTextIndex])
+    if (currentTextIndex < videoScenes[currentSceneIndex].sentence.length) {
+      setCurrentText(
+        (prevText) => prevText + videoScenes[currentSceneIndex].sentence[currentTextIndex]
+      )
       setCurrentTextIndex((prevIndex) => prevIndex + 1)
     }
   }
 
   useEffect(() => {
-    if (isPlaying) {
-      if (canvasRef.current != null) {
-        canvasCtxRef.current = canvasRef.current.getContext('2d')
+    const video = videoRef.current
+    const canvasCtxRef = canvasRef.current?.getContext('2d')
 
-        // Adjust canvas size for Retina displays
-        const scaleFactor = window.devicePixelRatio
-        canvasRef.current.width = canvasRef.current.clientWidth * scaleFactor
-        canvasRef.current.height = canvasRef.current.clientHeight * scaleFactor
-      }
-
-      const animate = (): void => {
-        if (canvasCtxRef.current != null && canvasRef.current != null) {
-          const currentScene = scenes[currentSceneIndex]
-          const image = new Image()
-          image.src = currentScene.media
-
-          image.onload = () => {
-            if (canvasCtxRef.current != null && canvasRef.current != null) {
-              // Draw image
-              canvasCtxRef.current?.drawImage(
-                image,
-                0,
-                0,
-                canvasRef.current.width,
-                canvasRef.current.height
-              )
-
-              // Draw text
-              canvasCtxRef.current.font = '80px Arial'
-              canvasCtxRef.current.fillStyle = 'white'
-              canvasCtxRef.current.textAlign = 'left'
-              canvasCtxRef.current.fillText(currentText, 100, 100)
-            }
-          }
-        }
-
-        // Request next frame
-        animationRef.current = requestAnimationFrame(animate)
-      }
-
-      // Start animation loop
-      animate()
-
-      // Clean up function
-      return () => {
-        if (animationRef.current != null) {
-          cancelAnimationFrame(animationRef.current)
-        }
+    const drawFrame = (): void => {
+      if (video != null && canvasCtxRef != null) {
+        canvasCtxRef.drawImage(
+          video,
+          0,
+          0,
+          canvasRef.current?.width ?? 3000,
+          canvasRef.current?.height ?? 1680
+        )
+        requestAnimationFrame(drawFrame)
       }
     }
-  }, [isPlaying, currentSceneIndex, currentText])
+
+    // Typing animation effect
+    const typingInterval = setInterval(() => {
+      typeText()
+    }, 150) // Adjust typing speed
+
+    if (video != null && canvasRef.current != null && canvasCtxRef != null) {
+      video.addEventListener('play', drawFrame)
+      // Draw text
+      canvasCtxRef.font = '80px Arial'
+      canvasCtxRef.fillStyle = 'white'
+      canvasCtxRef.textAlign = 'left'
+      canvasCtxRef.fillText(currentText, 100, 100)
+      return () => {
+        video.removeEventListener('play', drawFrame)
+        clearInterval(typingInterval)
+      }
+    }
+  })
 
   useEffect(() => {
     if (isPlaying) {
-      const currentScene = scenes[currentSceneIndex]
+      const currentScene = videoScenes[currentSceneIndex]
       const timeoutId = setTimeout(() => {
-        setCurrentSceneIndex(currentSceneIndex + 1 > scenes.length - 1 ? 0 : currentSceneIndex + 1)
+        setCurrentSceneIndex(
+          currentSceneIndex + 1 > videoScenes.length - 1 ? 0 : currentSceneIndex + 1
+        )
         setCurrentText('')
         setCurrentTextIndex(0)
       }, currentScene.duration * 1000)
@@ -129,6 +147,17 @@ const Canvas = (): JSX.Element => {
       }
     }
   })
+
+  useEffect(() => {
+    if (videoRef.current != null && isPlaying) {
+      const video = videoRef.current
+      video.src = videoScenes[currentSceneIndex].media
+      video.load()
+      void video?.play().catch((error) => {
+        console.error('Failed to play video:', error)
+      })
+    }
+  }, [currentSceneIndex, isPlaying])
 
   return (
     <div className="w-full h-full flex justify-center items-center">
@@ -168,8 +197,12 @@ const Canvas = (): JSX.Element => {
           Your browser does not support the audio element.
         </audio>
       </div>
+      <video className="hidden" ref={videoRef} width="400" height="300" controls>
+        <source src={videoScenes[currentSceneIndex].media} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </div>
   )
 }
 
-export default Canvas
+export default VideoCanvas
