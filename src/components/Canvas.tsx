@@ -10,7 +10,8 @@ const Canvas = () => {
   const animationRef = useRef<number>();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
-  const [textPositionX, setTextPositionX] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false)
 
   const handlePlay = () => {
@@ -24,8 +25,9 @@ const Canvas = () => {
   };
 
   const handleStop = () => {
-    setTextPositionX(0);
     setCurrentSceneIndex(0);
+    setCurrentText('');
+    setCurrentTextIndex(0);
     setIsPlaying(false);
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
@@ -35,6 +37,14 @@ const Canvas = () => {
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0;
+    }
+  };
+
+  // Function to simulate typing effect
+  const typeText = () => {
+    if (currentTextIndex < scenes[currentSceneIndex].sentence.length) {
+      setCurrentText(prevText => prevText + scenes[currentSceneIndex].sentence[currentTextIndex]);
+      setCurrentTextIndex(prevIndex => prevIndex + 1);
     }
   };
 
@@ -60,19 +70,13 @@ const Canvas = () => {
               // Draw image
               canvasCtxRef.current?.drawImage(image, 0, 0, canvasRef.current.width, canvasRef.current.height);
 
-              // Add text on top of the image
-              canvasCtxRef.current.font = '95px Arial';
+              // Draw text
+              canvasCtxRef.current.font = '80px Arial';
               canvasCtxRef.current.fillStyle = 'white';
-              canvasCtxRef.current.textAlign = 'center';
-              canvasCtxRef.current.fillText(currentScene.sentence, textPositionX, 100, 1000);
+              canvasCtxRef.current.textAlign = 'left';
+              canvasCtxRef.current.fillText(currentText, 100, 100);
             }
           };
-
-          // Update text position for next frame
-          setTextPositionX((prevPositionX) => {
-            const nextPositionX = prevPositionX + 0.15;
-            return nextPositionX;
-          });
         }
 
         // Request next frame
@@ -87,20 +91,28 @@ const Canvas = () => {
         cancelAnimationFrame(animationRef.current!);
       };
     }
-  }, [isPlaying, currentSceneIndex, textPositionX]);
+  }, [isPlaying, currentSceneIndex, currentText]);
   
-  useEffect(() => {
-    if (isPlaying) {
-      const currentScene = scenes[currentSceneIndex];
-      // Move to next scene after the duration of the current scene
-      const timeoutId = setTimeout(() => {
-        setCurrentSceneIndex(currentSceneIndex + 1 > scenes.length - 1 ? 0 : currentSceneIndex + 1);
-        setTextPositionX(0)
-      }, currentScene.duration * 1000);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [isPlaying, currentSceneIndex]);
+    useEffect(() => {
+      if (isPlaying) {
+        const currentScene = scenes[currentSceneIndex];
+        const timeoutId = setTimeout(() => {
+          setCurrentSceneIndex(currentSceneIndex + 1 > scenes.length - 1 ? 0 : currentSceneIndex + 1);
+          setCurrentText('');
+          setCurrentTextIndex(0);
+        }, currentScene.duration * 1000);
+  
+        // Typing animation effect
+        const typingInterval = setInterval(() => {
+          typeText();
+        }, 150); // Adjust typing speed
+  
+        return () => {
+          clearTimeout(timeoutId);
+          clearInterval(typingInterval);
+        };
+      }
+    });
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
