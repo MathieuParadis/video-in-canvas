@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 // DATA IMPORTS
-import { scenes } from '../data/scenes'
+import { imgScenes as scenes } from '../data/scenes'
 
 const Canvas = (): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -17,14 +17,9 @@ const Canvas = (): JSX.Element => {
   const handlePlay = (): void => {
     setIsPlaying(true)
 
-    audioRef.current
-      ?.play()
-      .then(() => {
-        // Play successful
-      })
-      .catch((error) => {
-        console.error('Failed to play audio:', error)
-      })
+    void audioRef.current?.play().catch((error) => {
+      console.error('Failed to play audio:', error)
+    })
   }
 
   const handlePause = (): void => {

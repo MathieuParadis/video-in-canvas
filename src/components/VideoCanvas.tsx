@@ -18,7 +18,9 @@ const VideoCanvas = (): JSX.Element => {
   const handlePlayVideo = (): void => {
     const video = videoRef.current
     if (video != null) {
-      video.play()
+      void video?.play().catch((error) => {
+        console.error('Failed to play audio:', error)
+      })
     }
   }
 
@@ -43,14 +45,9 @@ const VideoCanvas = (): JSX.Element => {
     setIsPlaying(true)
     handlePlayVideo()
 
-    audioRef.current
-      ?.play()
-      .then(() => {
-        // Play successful
-      })
-      .catch((error) => {
-        console.error('Failed to play audio:', error)
-      })
+    void audioRef.current?.play().catch((error) => {
+      console.error('Failed to play audio:', error)
+    })
   }
 
   const handlePause = (): void => {
@@ -114,8 +111,13 @@ const VideoCanvas = (): JSX.Element => {
       typeText()
     }, 150) // Adjust typing speed
 
-    if (video != null && canvasRef.current != null) {
+    if (video != null && canvasRef.current != null && canvasCtxRef != null) {
       video.addEventListener('play', drawFrame)
+      // Draw text
+      canvasCtxRef.font = '80px Arial'
+      canvasCtxRef.fillStyle = 'white'
+      canvasCtxRef.textAlign = 'left'
+      canvasCtxRef.fillText(currentText, 100, 100)
       return () => {
         video.removeEventListener('play', drawFrame)
         clearInterval(typingInterval)
