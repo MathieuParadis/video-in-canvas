@@ -9,20 +9,40 @@ const VideoCanvas = (): JSX.Element => {
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null)
   const animationRef = useRef<number>()
   const videoRef = useRef<HTMLVideoElement>(null)
-  const videoControlsRef = useRef<HTMLDivElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0)
   const [currentText, setCurrentText] = useState('')
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
 
+  // Function to handle video playback
+  const handlePlayVideo = (): void => {
+    const video = videoRef.current
+    if (video) {
+      video.play()
+    }
+  }
+
+  const handlePauseVideo = (): void => {
+    const video = videoRef.current
+    if (video) {
+      video.pause()
+      setIsPlaying(false)
+    }
+  }
+
+  const handleStopVideo = (): void => {
+    const video = videoRef.current
+    if (video) {
+      video.pause()
+      video.currentTime = 0
+      setIsPlaying(false)
+    }
+  }
+
   const handlePlay = (): void => {
     setIsPlaying(true)
-    const video = videoRef.current;
-    if (video) {
-      video.play();
-      setIsPlaying(true);
-    }
+    handlePlayVideo()
 
     audioRef.current
       ?.play()
@@ -37,12 +57,7 @@ const VideoCanvas = (): JSX.Element => {
   const handlePause = (): void => {
     setIsPlaying(false)
     audioRef.current?.pause()
-
-    const video = videoRef.current;
-    if (video) {
-      video.pause()
-      setIsPlaying(false)
-    }
+    handlePauseVideo()
   }
 
   const handleStop = (): void => {
@@ -59,6 +74,7 @@ const VideoCanvas = (): JSX.Element => {
       canvasRef.current?.width ?? 3000,
       canvasRef.current?.height ?? 1680
     )
+    handleStopVideo()
 
     if (audioRef.current != null) {
       audioRef.current.pause()
@@ -88,11 +104,10 @@ const VideoCanvas = (): JSX.Element => {
       }
     }
 
-          // Typing animation effect
-          const typingInterval = setInterval(() => {
-            typeText()
-          }, 150) // Adjust typing speed
-    
+    // Typing animation effect
+    const typingInterval = setInterval(() => {
+      typeText()
+    }, 150) // Adjust typing speed
 
     if (video && canvas) {
       video.addEventListener('play', drawFrame)
@@ -164,14 +179,10 @@ const VideoCanvas = (): JSX.Element => {
           Your browser does not support the audio element.
         </audio>
       </div>
-      <video ref={videoRef} width="400" height="300" controls>
+      <video className="hidden" ref={videoRef} width="400" height="300" controls>
         <source src={videoScenes[0].media} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <div ref={videoControlsRef}>
-        <button onClick={handlePlay}>Play</button>
-        <button onClick={handlePause}>Pause</button>
-      </div>
     </div>
   )
 }
