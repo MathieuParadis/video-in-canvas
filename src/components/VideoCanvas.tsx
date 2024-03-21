@@ -6,7 +6,6 @@ import { videoScenes } from '../data/scenes'
 
 const VideoCanvas = (): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null)
   const animationRef = useRef<number>()
   const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -61,6 +60,7 @@ const VideoCanvas = (): JSX.Element => {
   }
 
   const handleStop = (): void => {
+    const canvasCtxRef = canvasRef.current?.getContext('2d')
     setCurrentSceneIndex(0)
     setCurrentText('')
     setCurrentTextIndex(0)
@@ -68,7 +68,7 @@ const VideoCanvas = (): JSX.Element => {
     if (animationRef.current != null) {
       cancelAnimationFrame(animationRef.current)
     }
-    canvasCtxRef.current?.clearRect(
+    canvasCtxRef?.clearRect(
       0,
       0,
       canvasRef.current?.width ?? 3000,
@@ -95,11 +95,12 @@ const VideoCanvas = (): JSX.Element => {
   useEffect(() => {
     const video = videoRef.current
     const canvas = canvasRef.current
-    const context = canvas?.getContext('2d')
+    const canvasCtxRef = canvasRef.current?.getContext('2d')
 
-    const drawFrame = () => {
-      if (video && context) {
-        context.drawImage(video, 0, 0, canvas!.width, canvas!.height)
+
+    const drawFrame = (): void => {
+      if (video && canvasCtxRef) {
+        canvasCtxRef.drawImage(video, 0, 0, canvas!.width, canvas!.height)
         requestAnimationFrame(drawFrame)
       }
     }
