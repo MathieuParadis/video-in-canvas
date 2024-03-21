@@ -7,8 +7,9 @@
     "standard-with-typescript",
     "plugin:react/recommended",
     "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended",
+    "eslint-config-prettier"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -18,7 +19,16 @@
     "react"
   ],
   "rules": {
+    "indent": ["error", 2]
   },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "no-undef": "off"
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
