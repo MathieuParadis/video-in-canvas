@@ -2,7 +2,7 @@
 import React from 'react'
 
 // COMPONENTS IMPORTS
-import Canvas from './components/Canvas'
+import Canvas from './components/VideoCanvas'
 
 function App(): JSX.Element {
   return (
