@@ -116,7 +116,7 @@ const VideoCanvas = (): JSX.Element => {
         clearInterval(typingInterval)
       }
     }
-  }, [])
+  })
 
   useEffect(() => {
     if (isPlaying) {
