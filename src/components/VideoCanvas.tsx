@@ -17,14 +17,14 @@ const VideoCanvas = (): JSX.Element => {
   // Function to handle video playback
   const handlePlayVideo = (): void => {
     const video = videoRef.current
-    if (video) {
+    if (video != null) {
       video.play()
     }
   }
 
   const handlePauseVideo = (): void => {
     const video = videoRef.current
-    if (video) {
+    if (video != null) {
       video.pause()
       setIsPlaying(false)
     }
@@ -32,7 +32,7 @@ const VideoCanvas = (): JSX.Element => {
 
   const handleStopVideo = (): void => {
     const video = videoRef.current
-    if (video) {
+    if (video != null) {
       video.pause()
       video.currentTime = 0
       setIsPlaying(false)
@@ -94,13 +94,17 @@ const VideoCanvas = (): JSX.Element => {
 
   useEffect(() => {
     const video = videoRef.current
-    const canvas = canvasRef.current
     const canvasCtxRef = canvasRef.current?.getContext('2d')
 
-
     const drawFrame = (): void => {
-      if (video && canvasCtxRef) {
-        canvasCtxRef.drawImage(video, 0, 0, canvas!.width, canvas!.height)
+      if (video != null && canvasCtxRef != null) {
+        canvasCtxRef.drawImage(
+          video,
+          0,
+          0,
+          canvasRef.current?.width ?? 3000,
+          canvasRef.current?.height ?? 1680
+        )
         requestAnimationFrame(drawFrame)
       }
     }
@@ -110,7 +114,7 @@ const VideoCanvas = (): JSX.Element => {
       typeText()
     }, 150) // Adjust typing speed
 
-    if (video && canvas) {
+    if (video != null && canvasRef.current != null) {
       video.addEventListener('play', drawFrame)
       return () => {
         video.removeEventListener('play', drawFrame)
