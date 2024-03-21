@@ -16,7 +16,15 @@ const Canvas = (): JSX.Element => {
 
   const handlePlay = (): void => {
     setIsPlaying(true)
-    audioRef.current?.play()
+
+    audioRef.current
+      ?.play()
+      .then(() => {
+        // Play successful
+      })
+      .catch((error) => {
+        console.error('Failed to play audio:', error)
+      })
   }
 
   const handlePause = (): void => {
