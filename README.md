@@ -46,3 +46,8 @@ The video scenes are defined in an array of objects, where each object represent
   }
 ]
 ```
+
+## Enhancements
+- [ ] Refactor the application to handle both images and videos on the same canvas.
+- [ ] Fix the issue where the video duration restarts from the beginning when pausing and resuming playback.
+- [ ] Resolve the issue where text does not appear in video mode.
