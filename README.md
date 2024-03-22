@@ -1,46 +1,53 @@
-# Getting Started with Create React App
+# Canvas Video Player
+The Canvas Video Player is a JavaScript application that plays a video composed of scenes on an HTML canvas. Each scene consists of an image and a text caption. The video can be played, paused, and stopped by clicking on the canvas.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Features
+- Play a video composed of scenes on an HTML canvas.
+- Control playback (play, pause, stop) by clicking on the canvas.
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+1. Clone this repository to your local machine:
+```
+git clone https://github.com/your-username/canvas-video-player.git
+```
 
-### `yarn start`
+2. Install the package dependencies by running:
+```
+npm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Usage
+1. Start the server by running:
+```
+npm start
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+2. Open your web browser and navigate to `http://localhost:3000`.
 
-### `yarn test`
+3. To play the video, simply click on the canvas. Click again to pause the video. To stop and restart from the beginning click stop
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Data Format
+The video scenes are defined in an array of objects, where each object represents a scene with the following properties:
 
-### `yarn build`
+```javascript
+[
+  {
+    index: 0,
+    sentence: "This is a simple Javascript test",
+    media: "https://miro.medium.com/max/1024/1*OK8xc3Ic6EGYg2k6BeGabg.jpeg",
+    duration: 3
+  },
+  {
+    index: 1,
+    sentence: "Here comes the video!",
+    media: "https://media.gettyimages.com/videos/goodlooking-young-woman-in-casual-clothing-is-painting-in-workroom-video-id1069900546",
+    duration: 5
+  }
+]
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Enhancements
+- [ ] Refactor the application to handle both images and videos on the same canvas.
+- [ ] Fix the issue where the video duration restarts from the beginning when pausing and resuming playback.
+- [ ] Resolve the issue where text does not appear in video mode.
