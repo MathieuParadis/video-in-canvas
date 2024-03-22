@@ -12,7 +12,7 @@ export const scenes: SceneType[] = [
     index: 1,
     sentence: 'Here comes the video!',
     media:
-      'https://media.gettyimages.com/videos/goodlooking-young-woman-in-casual-clothing-is-painting-in-workroom-video-id1069900546',
+      'https://media.gettyimages.com/id/1368836891/fr/vid%C3%A9o/faim-chat.mp4?s=mp4-640x640-gi&k=20&c=IjLojhCwkZytvvL3mDI7BiLcDQcycrAFjyFAS5Wh7Q0=',
     duration: 5
   }
 ]
