@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 // DATA IMPORTS
 import { scenes } from '../data/scenes'
 
-const VideoCanvas = (): JSX.Element => {
+const VideoImgCanvas = (): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationRef = useRef<number>()
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -104,10 +104,10 @@ const VideoCanvas = (): JSX.Element => {
       }
     }
 
-    // Typing animation effect
-    const typingInterval = setInterval(() => {
-      typeText()
-    }, 150) // Adjust typing speed
+    // // Typing animation effect
+    // const typingInterval = setInterval(() => {
+    //   typeText()
+    // }, 150) // Adjust typing speed
 
     if (video != null && canvasRef.current != null && canvasCtxRef != null) {
       video.addEventListener('play', drawFrame)
@@ -118,7 +118,6 @@ const VideoCanvas = (): JSX.Element => {
       canvasCtxRef.fillText(currentText, 100, 100)
       return () => {
         video.removeEventListener('play', drawFrame)
-        clearInterval(typingInterval)
       }
     }
   })
@@ -254,4 +253,4 @@ const VideoCanvas = (): JSX.Element => {
   )
 }
 
-export default VideoCanvas
+export default VideoImgCanvas

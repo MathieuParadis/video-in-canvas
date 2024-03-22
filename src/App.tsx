@@ -2,12 +2,12 @@
 import React from 'react'
 
 // COMPONENTS IMPORTS
-import Canvas from './components/Canvasss'
+import VideoImgCanvas from './components/VideoImgCanvas'
 
 function App(): JSX.Element {
   return (
     <div className="h-screen w-screen flex justify-center items-center p-10 md:p-20">
-      <Canvas />
+      <VideoImgCanvas />
     </div>
   )
 }
